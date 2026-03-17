@@ -4,12 +4,12 @@
 ###Salida: print()
 
 #variables
-nom_per = input("¿Cuál es tu nombre?: ")
-anio = input("Ingresa tu anio de nacimiento: ")
-edad = 2026 - int(anio)
+#nom_per = input("¿Cuál es tu nombre?: ")
+#anio = input("Ingresa tu anio de nacimiento: ")
+#edad = 2026 - int(anio)
 #Funciones para str 
 #.upper()/.lower()/.capitalize()... ¿Qué otras más existen?
-genero = input("Ingresa (M) para masculino o (F) para femenino: ").upper()
+#genero = input("Ingresa (M) para masculino o (F) para femenino: ").upper()
 #Formas de hacer print/presentar por pantalla
 #1. Por comas
 #2. Concatenación (+)
@@ -31,50 +31,51 @@ genero = input("Ingresa (M) para masculino o (F) para femenino: ").upper()
 #print("Hola %s, mucho gusto. Tu edad es %d años" %(nom_per, anio))
 #print("Hola {}. Tu edad es {}".format(nom_per,edad))
 #print("Hola {fnom}. Tu edad es {fedad}".format(fnom=nom_per, fedad=edad))
-print(f"Hola, {nom_per}. Tu edad es {edad}")
+#print(f"Hola, {nom_per}. Tu edad es {edad}")
 
 #Lógica booleana - if/else |if/elif/else 
 ##Operadores I: and, or, not 
 ##Operadores II: >,<, >=, <=, ==, !=
 
-if edad >=18 and genero == "M":
-    print(f"Bienvenido al club, Sr. {nom_per}")
-elif edad>=18 and genero == "F":
-    print(f"Bienvenido al club, Srita/Sra. {nom_per}")
-else:
-    print("No eres mayor de edad. Vaya pa' su casa.")
+#if edad >=18 and genero == "M":
+#    print(f"Bienvenido al club, Sr. {nom_per}")
+#elif edad>=18 and genero == "F":
+#    print(f"Bienvenido al club, Srita/Sra. {nom_per}")
+#else:
+#    print("No eres mayor de edad. Vaya pa' su casa.")
 
 ##Ejemplo para estudios autónomos
-print("--- Sistema de Seguridad Nivel 1 ---")
+#print("--- Sistema de Seguridad Nivel 1 ---")
 
 # 1. Recolección de datos (I/O)
-nombre = input("Identifícate. ¿Cuál es tu nombre?: ")
+#nombre = input("Identifícate. ¿Cuál es tu nombre?: ")
 
 # Demostrar la conversión explícita
-edad_str = input("Ingresa tu edad: ")
-edad = int(edad_str) 
+#edad_str = input("Ingresa tu edad: ")
+#edad = int(edad_str) 
 
-tiene_credencial = input("¿Tienes credencial VIP? (si/no): ").lower() == "si"
+#tiene_credencial = input("¿Tienes credencial VIP? (si/no): ").lower() == "si"
 
 # 2. Lógica Booleana y Control de Flujo (if/elif/else)
-print("\nAnalizando credenciales...")
+#print("\nAnalizando credenciales...")
 
-if edad >= 18 and tiene_credencial:
+#if edad >= 18 and tiene_credencial:
     # Uso de f-strings para formateo moderno
-    print(f"Acceso Concedido. Bienvenido a la terminal, {nombre}.")
-elif edad >= 18 and not tiene_credencial:
-    print(f"Acceso Denegado. {nombre}, eres mayor de edad pero requieres pase VIP.")
-else:
+#    print(f"Acceso Concedido. Bienvenido a la terminal, {nombre}.")
+#elif edad >= 18 and not tiene_credencial:
+#    print(f"Acceso Denegado. {nombre}, eres mayor de edad pero requieres pase VIP.")
+#else:
     # Se calcula cuánto falta para los 18
-    print(f"Alerta de intruso. Te faltan {18 - edad} años para ingresar.")
+#    print(f"Alerta de intruso. Te faltan {18 - edad} años para ingresar.")
 
 
 ##Mini-taller I: Ejercicio para práctica autónoma
 ### La IA generó un sistema de cálculo de bonos, pero está crasheando y 
 # tomando decisiones ilógicas. ¿Puedes encontrar los 3 errores, 
 # arreglarlos y mejorar los prints usando f-strings?
-sueldo = input("Ingresa tu sueldo base: ")
-anios_empresa = input("¿Cuántos años llevas en la empresa?: ")
+
+sueldo = float(input("Ingresa tu sueldo base: ")) #El tipo de dato es numerico apra poder operar
+anios_empresa = float(input("¿Cuántos años llevas en la empresa?: ")) #Lo mismo del anterior
 
 bono = sueldo * 0.10 
 
@@ -85,5 +86,8 @@ else:
     print("No hay bono de antigüedad.")
     total = sueldo + bono
 
-print("Tu total a recibir es:")
-print(total)
+print(f"Tu total a recibir es: {total}") #implementa f-string para mejorar la presentación del resultado
+
+
+#-----------------------------------------(˶˃⤙˂˶)-------------------------------------------------------------#
+
