@@ -144,6 +144,7 @@ if __name__ == "__main__":
 
     # PRUEBA: Vuelve a ejecutar el script. Atlas nace de cero cada vez. Eso es amnesia.
     # CONCLUSION:
+    #El problema de la amnesia es que no podemos guardar informacion entre ejecuciones. Cada vez que cerramos Python, todo se borra. Para resolver esto, necesitamos una forma de almacenar datos de forma permanente. Ahí es donde entra SQLite: una base de datos que vive en un solo archivo y nos permite guardar agentes, mensajes y cualquier otra información que queramos conservar.
 
     # ======================================================
     # CAPITULO 2: SQL en 5 minutos (10 min)
@@ -155,12 +156,13 @@ if __name__ == "__main__":
     # sin que se rompa nada.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
-    # print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
+    crear_tablas()
+    print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
+    print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
 
     # PRUEBA: Busca el archivo agentes.db en tu carpeta S5/. Abrelo con un editor de texto. ¿Que ves? (Nada legible, es binario.)
     # CONCLUSION:
+    # El archivo agentes.db es un archivo binario que contiene la base de datos SQLite. No es legible directamente, pero podemos interactuar con él a través de las funciones que hemos definido. Cada vez que ejecutamos crear_tablas(), si el archivo no existe, se crea automáticamente. Si ya existe, simplemente se asegura de que las tablas estén presentes sin modificar el contenido existente.
 
     # ======================================================
     # CAPITULO 3: Registrar un agente (10 min)
@@ -172,12 +174,13 @@ if __name__ == "__main__":
     # Si el nombre ya existe (PRIMARY KEY), salta IntegrityError.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # print(registrar_agente("Atlas", "explorador", 100))
-    # print(registrar_agente("Nova", "cientifica", 150))
-    # print(registrar_agente("Titan", "guardian", 200))
+    print(registrar_agente("Atlas", "explorador", 100))
+    print(registrar_agente("Nova", "cientifica", 150))
+    print(registrar_agente("Titan", "guardian", 200))
 
     # PRUEBA: Intenta registrar 'Atlas' dos veces. ¿Que mensaje recibes? ¿Por que?
     # CONCLUSION:
+    # Al intentar registrar 'Atlas' dos veces, recibimos un mensaje de error que indica que el agente ya existe en la base de datos. Esto se debe a que 'nombre' es la clave primaria de la tabla 'agentes', lo que significa que cada nombre debe ser único. SQLite lanza una excepción IntegrityError cuando intentamos insertar un valor duplicado en una columna con restricción de clave primaria.
 
     # ======================================================
     # CAPITULO 4: Despertar un agente (10 min)
@@ -188,16 +191,17 @@ if __name__ == "__main__":
     # Lo importante: los datos PERSISTEN entre ejecuciones.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # datos_atlas = despertar_agente("Atlas")
-    # print(f"Agente encontrado: {datos_atlas}")
-    # print("Ahora cierra Python (Ctrl+C o cierra la terminal).")
-    # print("Vuelve a abrir y ejecuta SOLO este capitulo. El agente sigue ahi.")
-    #
-    # datos_fantasma = despertar_agente("NoExisto")
-    # print(f"Agente inexistente: {datos_fantasma}")
+    datos_atlas = despertar_agente("Atlas")
+    print(f"Agente encontrado: {datos_atlas}")
+    print("Ahora cierra Python (Ctrl+C o cierra la terminal).")
+    print("Vuelve a abrir y ejecuta SOLO este capitulo. El agente sigue ahi.")
+    
+    datos_fantasma = despertar_agente("NoExisto")
+    print(f"Agente inexistente: {datos_fantasma}")
 
     # PRUEBA: Cierra Python completamente. Vuelve a abrir. Ejecuta despertar_agente('Atlas'). ¿Sigue vivo?
     # CONCLUSION:
+    # Al cerrar Python y volver a abrirlo, al ejecutar despertar_agente('Atlas'), el agente sigue vivo. Esto demuestra que los datos se han guardado de forma permanente en la base de datos SQLite, y no dependen de la ejecución actual del script. La función despertar_agente puede recuperar la información del agente incluso después de que el programa haya terminado y se haya reiniciado.
 
     # ======================================================
     # CAPITULO 5: La tabla de mensajes (10 min)
@@ -208,12 +212,13 @@ if __name__ == "__main__":
     # Esto permite tener un historial ordenado de comunicaciones.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # print(enviar_mensaje("Atlas", "Nova", "Encontre un artefacto en la cueva norte."))
-    # print(enviar_mensaje("Nova", "Atlas", "Excelente. Enviare un drone de analisis."))
-    # print(enviar_mensaje("Titan", "Nova", "Perimetro asegurado. Sin amenazas detectadas."))
+    print(enviar_mensaje("Atlas", "Nova", "Encontre un artefacto en la cueva norte."))
+    print(enviar_mensaje("Nova", "Atlas", "Excelente. Enviare un drone de analisis."))
+    print(enviar_mensaje("Titan", "Nova", "Perimetro asegurado. Sin amenazas detectadas."))
 
     # PRUEBA: Envia un mensaje de Atlas a si mismo. ¿Funciona? ¿Deberia?
     # CONCLUSION:
+    # Al enviar un mensaje de Atlas a sí mismo, la función enviar_mensaje lo permite sin ningún problema. Esto se debe a que no hay ninguna restricción en la base de datos que impida que el remitente y el destinatario sean el mismo. En algunos casos, esto podría ser útil para que un agente registre notas o recordatorios para sí mismo. Sin embargo, si queremos evitar esto, podríamos agregar una validación adicional en la función enviar_mensaje para asegurarnos de que el remitente y el destinatario sean diferentes.
 
     # ======================================================
     # CAPITULO 6: Bandeja de entrada (10 min)
@@ -223,13 +228,22 @@ if __name__ == "__main__":
     # ordena cronologicamente. fetchall() retorna TODAS las filas.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # mensajes_nova = leer_mensajes("Nova")
-    # print(f"\n--- Bandeja de entrada de Nova ({len(mensajes_nova)} mensajes) ---")
-    # for msg in mensajes_nova:
-    #     print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+    mensajes_nova = leer_mensajes("Nova")
+    print(f"\n--- Bandeja de entrada de Nova ({len(mensajes_nova)} mensajes) ---")
+    for msg in mensajes_nova:
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
 
     # PRUEBA: Crea un tercer agente 'Hermes'. Envia mensajes desde Atlas y Nova a Hermes. Lee la bandeja de Hermes.
+    print(registrar_agente("Hermes", "mensajero", 120))
+    print(enviar_mensaje("Atlas", "Hermes", "Mensaje urgente de Atlas."))
+    print(enviar_mensaje("Nova", "Hermes", "Mensaje de Nova para ti."))
+
+    mensajes_hermes = leer_mensajes("Hermes")
+    print(f"\n--- Bandeja de entrada de Hermes ({len(mensajes_hermes)} mensajes) ---")
+    for msg in mensajes_hermes:
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
     # CONCLUSION:
+    # Al crear un tercer agente 'Hermes' y enviar mensajes desde Atlas y Nova a Hermes, podemos leer la bandeja de Hermes utilizando la función leer_mensajes("Hermes"). Esto nos permitirá ver todos los mensajes dirigidos a Hermes, ordenados por timestamp. Esta funcionalidad es esencial para que los agentes puedan comunicarse entre sí y mantener un registro de sus interacciones.
 
     # ======================================================
     # CAPITULO 7: Experimentacion libre (5 min)
@@ -238,24 +252,25 @@ if __name__ == "__main__":
     # Aqui tienes un mini-script de ejemplo que combina todo:
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(registrar_agente("Hermes", "mensajero", 120))
-    # print(registrar_agente("Lyra", "diplomata", 90))
-    #
-    # print(enviar_mensaje("Hermes", "Lyra", "Tienes un mensaje del consejo."))
-    # print(enviar_mensaje("Lyra", "Hermes", "Recibido. Preparare la respuesta."))
-    # print(enviar_mensaje("Atlas", "Hermes", "Necesito que lleves esto a Lyra."))
-    #
-    # print("\n--- Todos los agentes registrados ---")
-    # for agente in listar_agentes():
-    #     print(f"  {agente['nombre']} | Rol: {agente['rol']} | Energia: {agente['energia']}")
-    #
-    # print("\n--- Bandeja de Hermes ---")
-    # for msg in leer_mensajes("Hermes"):
-    #     print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+    crear_tablas()
+    print(registrar_agente("Hermes", "mensajero", 120))
+    print(registrar_agente("Lyra", "diplomata", 90))
+    
+    print(enviar_mensaje("Hermes", "Lyra", "Tienes un mensaje del consejo."))
+    print(enviar_mensaje("Lyra", "Hermes", "Recibido. Preparare la respuesta."))
+    print(enviar_mensaje("Atlas", "Hermes", "Necesito que lleves esto a Lyra."))
+    
+    print("\n--- Todos los agentes registrados ---")
+    for agente in listar_agentes():
+        print(f"  {agente['nombre']} | Rol: {agente['rol']} | Energia: {agente['energia']}")
+    
+    print("\n--- Bandeja de Hermes ---")
+    for msg in leer_mensajes("Hermes"):
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
 
     # PRUEBA: Cierra Python. Vuelve a abrir. ¿Siguen los mensajes? ¿Y los agentes?
     # CONCLUSION:
+    # Al cerrar Python y volver a abrirlo, los mensajes y los agentes siguen existiendo. Esto demuestra que la información se ha guardado de forma permanente en la base de datos SQLite, y no depende de la ejecución actual del script. Podemos continuar interactuando con los mismos agentes y mensajes incluso después de reiniciar el programa, lo que es fundamental para cualquier sistema que requiera persistencia de datos.
 
     # -----------------------------------------------------------#
     # Felicidades! Ya sabes persistir datos con SQLite.

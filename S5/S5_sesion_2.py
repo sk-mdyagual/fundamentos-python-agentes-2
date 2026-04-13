@@ -130,7 +130,7 @@ app = FastAPI(
 
 @app.get("/")
 def inicio():
-    return {"status": "online", "mensaje": "Bienvenido al sistema de agentes"}
+    return {"status": "online", "mensaje": "Bienvenido Oscar al sistema de agentes"}
 
 
 # PRUEBA: Abre http://localhost:8000/docs en tu navegador. Esa es Swagger UI.
@@ -139,7 +139,8 @@ def inicio():
 # PRUEBA: Cambia el mensaje de arriba, guarda el archivo, y recarga /docs.
 #         uvicorn --reload detecta el cambio y reinicia el servidor solo.
 # CONCLUSION:
-
+# - Un endpoint es una URL que responde a peticiones HTTP.
+# - @app.get("/") convierte la funcion en un endpoint GET en la ruta "/".
 
 # ======================================================
 # CAPITULO 4: GET con parametros (10 min)
@@ -157,22 +158,23 @@ def inicio():
 # Para eso usamos HTTPException.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-# @app.get("/agente/{nombre}")
-# def obtener_agente(nombre: str):
-#     agente = despertar_agente(nombre)
-#     if agente is None:
-#         raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
-#     return agente
-#
-#
-# @app.get("/agentes/")
-# def obtener_todos_los_agentes():
-#     return listar_agentes()
+@app.get("/agente/{nombre}")
+def obtener_agente(nombre: str):
+    agente = despertar_agente(nombre)
+    if agente is None:
+        raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
+    return agente
+
+
+@app.get("/agentes/")
+def obtener_todos_los_agentes():
+    return listar_agentes()
 
 # PRUEBA: Prueba en Swagger UI: busca un agente que exista y uno que no.
 #         ¿Que respuesta recibes? ¿Que codigo HTTP retorna cada caso?
 # CONCLUSION:
-
+# - {nombre} en la ruta es un PATH PARAMETER que FastAPI extrae y pasa a la funcion.
+# - HTTPException(status_code=404) retorna un error HTTP con codigo 404 y mensaje personalizado.
 
 # ======================================================
 # CAPITULO 5: POST endpoints (10 min)
@@ -191,21 +193,21 @@ def inicio():
 # con detalles de que salio mal. No necesitas escribir validacion manual.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-# @app.post("/agentes/")
-# def crear_agente(agente: AgenteRequest):
-#     resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
-#     return {"mensaje": resultado}
-#
-#
-# @app.post("/mensajes/")
-# def crear_mensaje(mensaje: MensajeRequest):
-#     resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
-#     return {"mensaje": resultado}
-#
-#
-# @app.get("/mensajes/{nombre}")
-# def obtener_mensajes(nombre: str):
-#     return leer_mensajes(nombre)
+@app.post("/agentes/")
+def crear_agente(agente: AgenteRequest):
+    resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
+    return {"mensaje": resultado}
+
+
+@app.post("/mensajes/")
+def crear_mensaje(mensaje: MensajeRequest):
+    resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
+    return {"mensaje": resultado}
+
+
+@app.get("/mensajes/{nombre}")
+def obtener_mensajes(nombre: str):
+    return leer_mensajes(nombre)
 
 # PRUEBA: En Swagger UI: crea un agente nuevo via POST /agentes/.
 #         Luego consultalo via GET /agente/{nombre}. ¿Aparece?
@@ -214,7 +216,8 @@ def inicio():
 # PRUEBA: Intenta enviar un POST con energia="hola" en vez de un numero.
 #         ¿Que error recibes? Esa es la validacion automatica de Pydantic.
 # CONCLUSION:
-
+# - POST es para enviar datos nuevos en el BODY de la peticion.
+# - FastAPI usa modelos Pydantic para validar y convertir datos automaticamente.
 
 # -----------------------------------------------------------#
 # Felicidades! Ya tienes un servidor web que expone tus agentes
