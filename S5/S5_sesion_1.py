@@ -144,7 +144,8 @@ if __name__ == "__main__":
 
     # PRUEBA: Vuelve a ejecutar el script. Atlas nace de cero cada vez. Eso es amnesia.
     # CONCLUSION:
-
+    """La variable agente esta guardando un diccionario con valores que le paso, pero solo los guarda en la ejecución, 
+     es decir, en memoria. Una vez finaliza la ejecución los datos se eliminan """ 
     # ======================================================
     # CAPITULO 2: SQL en 5 minutos (10 min)
     # ======================================================
@@ -155,13 +156,14 @@ if __name__ == "__main__":
     # sin que se rompa nada.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
-    # print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
+    crear_tablas()
+    print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
+    print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
 
     # PRUEBA: Busca el archivo agentes.db en tu carpeta S5/. Abrelo con un editor de texto. ¿Que ves? (Nada legible, es binario.)
     # CONCLUSION:
-
+    """El archivo agentes.db no se puede leer por que es binario, pero guarda los datos que se ingrese de manera persistente,
+    y Python sabe como interpretar ese archivo para leerlo y escribir"""
     # ======================================================
     # CAPITULO 3: Registrar un agente (10 min)
     # ======================================================
@@ -172,13 +174,15 @@ if __name__ == "__main__":
     # Si el nombre ya existe (PRIMARY KEY), salta IntegrityError.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # print(registrar_agente("Atlas", "explorador", 100))
-    # print(registrar_agente("Nova", "cientifica", 150))
-    # print(registrar_agente("Titan", "guardian", 200))
+    print(registrar_agente("Atlas", "explorador", 100))
+    print(registrar_agente("Nova", "cientifica", 150))
+    print(registrar_agente("Titan", "guardian", 200))
 
     # PRUEBA: Intenta registrar 'Atlas' dos veces. ¿Que mensaje recibes? ¿Por que?
+    """El mensaje recibido es: El agente 'Atlas' ya existe en la base de datos y es por que ya quedo registrado en la primera ejecución"""
     # CONCLUSION:
-
+    """ El nombre es una llave primaria y al tener esta caracteristica no puede ser duplicada y al intentar registrar una duplicidad se tiene como generación de exeption
+    except sqlite3.IntegrityError evitando que el programa se rompa"""
     # ======================================================
     # CAPITULO 4: Despertar un agente (10 min)
     # ======================================================
@@ -188,16 +192,17 @@ if __name__ == "__main__":
     # Lo importante: los datos PERSISTEN entre ejecuciones.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # datos_atlas = despertar_agente("Atlas")
-    # print(f"Agente encontrado: {datos_atlas}")
-    # print("Ahora cierra Python (Ctrl+C o cierra la terminal).")
-    # print("Vuelve a abrir y ejecuta SOLO este capitulo. El agente sigue ahi.")
-    #
-    # datos_fantasma = despertar_agente("NoExisto")
-    # print(f"Agente inexistente: {datos_fantasma}")
+    datos_atlas = despertar_agente("Atlas")
+    print(f"Agente encontrado: {datos_atlas}")
+    print("Ahora cierra Python (Ctrl+C o cierra la terminal).")
+    print("Vuelve a abrir y ejecuta SOLO este capitulo. El agente sigue ahi.")
+    
+    datos_fantasma = despertar_agente("NoExisto")
+    print(f"Agente inexistente: {datos_fantasma}")
 
     # PRUEBA: Cierra Python completamente. Vuelve a abrir. Ejecuta despertar_agente('Atlas'). ¿Sigue vivo?
     # CONCLUSION:
+    """El agente sigue existiendo ya que esta registrado en BD y al cerrar Python no se pierde la información """
 
     # ======================================================
     # CAPITULO 5: La tabla de mensajes (10 min)
@@ -208,13 +213,13 @@ if __name__ == "__main__":
     # Esto permite tener un historial ordenado de comunicaciones.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # print(enviar_mensaje("Atlas", "Nova", "Encontre un artefacto en la cueva norte."))
-    # print(enviar_mensaje("Nova", "Atlas", "Excelente. Enviare un drone de analisis."))
-    # print(enviar_mensaje("Titan", "Nova", "Perimetro asegurado. Sin amenazas detectadas."))
+    print(enviar_mensaje("Atlas", "Nova", "Encontre un artefacto en la cueva norte."))
+    print(enviar_mensaje("Nova", "Atlas", "Excelente. Enviare un drone de analisis."))
+    print(enviar_mensaje("Titan", "Nova", "Perimetro asegurado. Sin amenazas detectadas."))
 
     # PRUEBA: Envia un mensaje de Atlas a si mismo. ¿Funciona? ¿Deberia?
     # CONCLUSION:
-
+    """Sí funciona, ya que no hay validación"""
     # ======================================================
     # CAPITULO 6: Bandeja de entrada (10 min)
     # ======================================================
@@ -223,14 +228,22 @@ if __name__ == "__main__":
     # ordena cronologicamente. fetchall() retorna TODAS las filas.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # mensajes_nova = leer_mensajes("Nova")
-    # print(f"\n--- Bandeja de entrada de Nova ({len(mensajes_nova)} mensajes) ---")
-    # for msg in mensajes_nova:
-    #     print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+    mensajes_nova = leer_mensajes("Nova")
+    print(f"\n--- Bandeja de entrada de Nova ({len(mensajes_nova)} mensajes) ---")
+    for msg in mensajes_nova:
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+
 
     # PRUEBA: Crea un tercer agente 'Hermes'. Envia mensajes desde Atlas y Nova a Hermes. Lee la bandeja de Hermes.
-    # CONCLUSION:
 
+    registrar_agente("Hermes", "mensajero", 120)    
+    enviar_mensaje("Atlas", "Hermes", "Mensaje 1")
+    enviar_mensaje("Nova", "Hermes", "Mensaje 2")
+
+    print(leer_mensajes("Hermes"))
+
+    # CONCLUSION:
+    """Se tiene una persistencia de datos permitiendo ingresar nuevos registros y consultarlos de manera filtrada"""
     # ======================================================
     # CAPITULO 7: Experimentacion libre (5 min)
     # ======================================================
@@ -238,25 +251,25 @@ if __name__ == "__main__":
     # Aqui tienes un mini-script de ejemplo que combina todo:
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(registrar_agente("Hermes", "mensajero", 120))
-    # print(registrar_agente("Lyra", "diplomata", 90))
-    #
-    # print(enviar_mensaje("Hermes", "Lyra", "Tienes un mensaje del consejo."))
-    # print(enviar_mensaje("Lyra", "Hermes", "Recibido. Preparare la respuesta."))
-    # print(enviar_mensaje("Atlas", "Hermes", "Necesito que lleves esto a Lyra."))
-    #
-    # print("\n--- Todos los agentes registrados ---")
-    # for agente in listar_agentes():
-    #     print(f"  {agente['nombre']} | Rol: {agente['rol']} | Energia: {agente['energia']}")
-    #
-    # print("\n--- Bandeja de Hermes ---")
-    # for msg in leer_mensajes("Hermes"):
-    #     print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+    crear_tablas()
+    print(registrar_agente("Hermes", "mensajero", 120))
+    print(registrar_agente("Lyra", "diplomata", 90))
+    
+    print(enviar_mensaje("Hermes", "Lyra", "Tienes un mensaje del consejo."))
+    print(enviar_mensaje("Lyra", "Hermes", "Recibido. Preparare la respuesta."))
+    print(enviar_mensaje("Atlas", "Hermes", "Necesito que lleves esto a Lyra."))
+    
+    print("\n--- Todos los agentes registrados ---")
+    for agente in listar_agentes():
+        print(f"  {agente['nombre']} | Rol: {agente['rol']} | Energia: {agente['energia']}")
+    
+    print("\n--- Bandeja de Hermes ---")
+    for msg in leer_mensajes("Hermes"):
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
 
     # PRUEBA: Cierra Python. Vuelve a abrir. ¿Siguen los mensajes? ¿Y los agentes?
     # CONCLUSION:
-
+    """Hay una persistencia de información"""
     # -----------------------------------------------------------#
     # Felicidades! Ya sabes persistir datos con SQLite.
     # En la proxima sesion conectaremos estas funciones a una API
