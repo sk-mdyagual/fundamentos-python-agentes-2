@@ -138,7 +138,9 @@ def inicio():
 #         por FastAPI a partir de tu codigo. Puedes probar endpoints ahi mismo.
 # PRUEBA: Cambia el mensaje de arriba, guarda el archivo, y recarga /docs.
 #         uvicorn --reload detecta el cambio y reinicia el servidor solo.
-# CONCLUSION:
+# CONCLUSION: Con solo unas lineas de codigo, ya tienes un servidor web corriendo en tu maquina. 
+# Cualquier programa puede hablar con el a traves de HTTP. 
+# FastAPI se encarga de convertir tus funciones normales en endpoints accesibles desde el navegador o cualquier cliente HTTP.
 
 
 # ======================================================
@@ -157,21 +159,23 @@ def inicio():
 # Para eso usamos HTTPException.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-# @app.get("/agente/{nombre}")
-# def obtener_agente(nombre: str):
-#     agente = despertar_agente(nombre)
-#     if agente is None:
-#         raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
-#     return agente
-#
-#
-# @app.get("/agentes/")
-# def obtener_todos_los_agentes():
-#     return listar_agentes()
+@app.get("/agente/{nombre}")
+def obtener_agente(nombre: str):
+    agente = despertar_agente(nombre)
+    if agente is None:
+        raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
+    return agente
+
+
+@app.get("/agentes/")
+def obtener_todos_los_agentes():
+    return listar_agentes()
 
 # PRUEBA: Prueba en Swagger UI: busca un agente que exista y uno que no.
 #         ¿Que respuesta recibes? ¿Que codigo HTTP retorna cada caso?
-# CONCLUSION:
+# CONCLUSION: Los path parameters son una forma comun de que el cliente le diga al servidor que recurso quiere.
+# HTTPException es la forma correcta de retornar errores con codigos estandar.
+# El cliente puede usar el codigo para entender que paso (404 = no existe, 422 = datos invalidos, etc).
 
 
 # ======================================================
@@ -191,21 +195,21 @@ def inicio():
 # con detalles de que salio mal. No necesitas escribir validacion manual.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-# @app.post("/agentes/")
-# def crear_agente(agente: AgenteRequest):
-#     resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
-#     return {"mensaje": resultado}
-#
-#
-# @app.post("/mensajes/")
-# def crear_mensaje(mensaje: MensajeRequest):
-#     resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
-#     return {"mensaje": resultado}
-#
-#
-# @app.get("/mensajes/{nombre}")
-# def obtener_mensajes(nombre: str):
-#     return leer_mensajes(nombre)
+@app.post("/agentes/")
+def crear_agente(agente: AgenteRequest):
+    resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
+    return {"mensaje": resultado}
+
+
+@app.post("/mensajes/")
+def crear_mensaje(mensaje: MensajeRequest):
+    resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
+    return {"mensaje": resultado}
+
+
+@app.get("/mensajes/{nombre}")
+def obtener_mensajes(nombre: str):
+    return leer_mensajes(nombre)
 
 # PRUEBA: En Swagger UI: crea un agente nuevo via POST /agentes/.
 #         Luego consultalo via GET /agente/{nombre}. ¿Aparece?
@@ -213,7 +217,9 @@ def inicio():
 #         Luego consulta la bandeja via GET /mensajes/{nombre}.
 # PRUEBA: Intenta enviar un POST con energia="hola" en vez de un numero.
 #         ¿Que error recibes? Esa es la validacion automatica de Pydantic.
-# CONCLUSION:
+# CONCLUSION: POST es el metodo para enviar datos nuevos al servidor. El cliente envia un JSON en el body de la peticion 
+# FastAPI lo convierte automaticamente en un objeto Python usando los modelos Pydantic. Si el cliente envia datos invalidos
+# FastAPI retorna un error 422 con detalles del problema.  
 
 
 # -----------------------------------------------------------#

@@ -143,7 +143,8 @@ if __name__ == "__main__":
     print("Script terminado. ¿Donde quedo el agente Atlas? En ningun lado. La RAM se borro.")
 
     # PRUEBA: Vuelve a ejecutar el script. Atlas nace de cero cada vez. Eso es amnesia.
-    # CONCLUSION:
+    # CONCLUSION: Los agentes que están en la memoria RAM duran solo mientras el programa está corriendo. 
+    # Si no hay persistencia, cada vez que se ejecutan empiezan desde cero, sin recordar nada ni haber aprendido antes.
 
     # ======================================================
     # CAPITULO 2: SQL en 5 minutos (10 min)
@@ -155,12 +156,12 @@ if __name__ == "__main__":
     # sin que se rompa nada.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
-    # print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
+    crear_tablas()
+    print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
+    print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
 
     # PRUEBA: Busca el archivo agentes.db en tu carpeta S5/. Abrelo con un editor de texto. ¿Que ves? (Nada legible, es binario.)
-    # CONCLUSION:
+    # CONCLUSION: En efecto no es legible porque es un formato binario optimizado para consultas rápidas, no para lectura humana. Pero ahí están nuestros datos, organizados en tablas.
 
     # ======================================================
     # CAPITULO 3: Registrar un agente (10 min)
@@ -172,12 +173,14 @@ if __name__ == "__main__":
     # Si el nombre ya existe (PRIMARY KEY), salta IntegrityError.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # print(registrar_agente("Atlas", "explorador", 100))
-    # print(registrar_agente("Nova", "cientifica", 150))
-    # print(registrar_agente("Titan", "guardian", 200))
+    print(registrar_agente("Atlas", "explorador", 100))
+    print(registrar_agente("Nova", "cientifica", 150))
+    print(registrar_agente("Titan", "guardian", 200))
+    print(registrar_agente("Hermes", "mensajero", 120))
 
     # PRUEBA: Intenta registrar 'Atlas' dos veces. ¿Que mensaje recibes? ¿Por que?
-    # CONCLUSION:
+    # CONCLUSION: Como ya existe un agente con nombre 'Atlas', la base de datos lanza un error de integridad porque el nombre es la clave primaria y debe ser unico.
+    #  Nuestra funcion captura ese error y devuelve un mensaje indicando que el agente ya existe.
 
     # ======================================================
     # CAPITULO 4: Despertar un agente (10 min)
@@ -188,16 +191,17 @@ if __name__ == "__main__":
     # Lo importante: los datos PERSISTEN entre ejecuciones.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # datos_atlas = despertar_agente("Atlas")
-    # print(f"Agente encontrado: {datos_atlas}")
-    # print("Ahora cierra Python (Ctrl+C o cierra la terminal).")
-    # print("Vuelve a abrir y ejecuta SOLO este capitulo. El agente sigue ahi.")
+    datos_atlas = despertar_agente("Atlas")
+    print(f"Agente encontrado: {datos_atlas}")
+    print("Ahora cierra Python (Ctrl+C o cierra la terminal).")
+    print("Vuelve a abrir y ejecuta SOLO este capitulo. El agente sigue ahi.")
     #
-    # datos_fantasma = despertar_agente("NoExisto")
-    # print(f"Agente inexistente: {datos_fantasma}")
+    datos_fantasma = despertar_agente("NoExisto")
+    print(f"Agente inexistente: {datos_fantasma}")
 
     # PRUEBA: Cierra Python completamente. Vuelve a abrir. Ejecuta despertar_agente('Atlas'). ¿Sigue vivo?
-    # CONCLUSION:
+    # CONCLUSION: Si, sigue vivo. Eso es porque sus datos están guardados en la base de datos agentes.db, no en la memoria RAM. 
+    # Mientras el archivo exista, podemos despertar a Atlas aunque hayamos cerrado y vuelto a abrir Python.
 
     # ======================================================
     # CAPITULO 5: La tabla de mensajes (10 min)
@@ -208,12 +212,14 @@ if __name__ == "__main__":
     # Esto permite tener un historial ordenado de comunicaciones.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # print(enviar_mensaje("Atlas", "Nova", "Encontre un artefacto en la cueva norte."))
-    # print(enviar_mensaje("Nova", "Atlas", "Excelente. Enviare un drone de analisis."))
-    # print(enviar_mensaje("Titan", "Nova", "Perimetro asegurado. Sin amenazas detectadas."))
+    print(enviar_mensaje("Atlas", "Nova", "Encontre un artefacto en la cueva norte."))
+    print(enviar_mensaje("Nova", "Atlas", "Excelente. Enviare un drone de analisis."))
+    print(enviar_mensaje("Titan", "Nova", "Perimetro asegurado. Sin amenazas detectadas."))
 
     # PRUEBA: Envia un mensaje de Atlas a si mismo. ¿Funciona? ¿Deberia?
-    # CONCLUSION:
+    # CONCLUSION: Si, funciona. No hay ninguna restriccion tecnica que impida que un agente se envie mensajes a si mismo. 
+    # En algunos casos puede ser util para que un agente registre eventos o tome notas internas. 
+    # Sin embargo, en otros contextos podria no tener sentido y se podria agregar una validacion para evitarlo.
 
     # ======================================================
     # CAPITULO 6: Bandeja de entrada (10 min)
@@ -223,13 +229,24 @@ if __name__ == "__main__":
     # ordena cronologicamente. fetchall() retorna TODAS las filas.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # mensajes_nova = leer_mensajes("Nova")
-    # print(f"\n--- Bandeja de entrada de Nova ({len(mensajes_nova)} mensajes) ---")
-    # for msg in mensajes_nova:
-    #     print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+    mensajes_nova = leer_mensajes("Nova")
+    print(f"\n--- Bandeja de entrada de Nova ({len(mensajes_nova)} mensajes) ---")
+    for msg in mensajes_nova:
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
 
     # PRUEBA: Crea un tercer agente 'Hermes'. Envia mensajes desde Atlas y Nova a Hermes. Lee la bandeja de Hermes.
-    # CONCLUSION:
+    print(registrar_agente("Hermes", "mensajero", 120))
+    print(enviar_mensaje("Atlas", "Hermes", "Hermes, lleva este paquete al sector 7."))
+    print(enviar_mensaje("Nova", "Hermes", "Hermes, necesito un informe del laboratorio."))
+
+    mensajes_hermes = leer_mensajes("Hermes")
+    print(f"\n--- Bandeja de entrada de Hermes ({len(mensajes_hermes)} mensajes) ---")
+    for msg in mensajes_hermes:
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+
+    # CONCLUSION: La bandeja de entrada de cada agente se mantiene actualizada con los mensajes que le han sido enviados, 
+    # incluso si el agente no estaba "despierto" en el momento de recibirlos. Esto demuestra que la persistencia en la base de datos 
+    # permite que los agentes tengan una memoria histórica de sus comunicaciones, lo cual es fundamental para su funcionamiento a largo plazo.
 
     # ======================================================
     # CAPITULO 7: Experimentacion libre (5 min)
@@ -238,24 +255,25 @@ if __name__ == "__main__":
     # Aqui tienes un mini-script de ejemplo que combina todo:
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(registrar_agente("Hermes", "mensajero", 120))
-    # print(registrar_agente("Lyra", "diplomata", 90))
-    #
-    # print(enviar_mensaje("Hermes", "Lyra", "Tienes un mensaje del consejo."))
-    # print(enviar_mensaje("Lyra", "Hermes", "Recibido. Preparare la respuesta."))
-    # print(enviar_mensaje("Atlas", "Hermes", "Necesito que lleves esto a Lyra."))
-    #
-    # print("\n--- Todos los agentes registrados ---")
-    # for agente in listar_agentes():
-    #     print(f"  {agente['nombre']} | Rol: {agente['rol']} | Energia: {agente['energia']}")
-    #
-    # print("\n--- Bandeja de Hermes ---")
-    # for msg in leer_mensajes("Hermes"):
-    #     print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+    crear_tablas()
+    print(registrar_agente("Hermes", "mensajero", 120))
+    print(registrar_agente("Lyra", "diplomata", 90))
+    
+    print(enviar_mensaje("Hermes", "Lyra", "Tienes un mensaje del consejo."))
+    print(enviar_mensaje("Lyra", "Hermes", "Recibido. Preparare la respuesta."))
+    print(enviar_mensaje("Atlas", "Hermes", "Necesito que lleves esto a Lyra."))
+    
+    print("\n--- Todos los agentes registrados ---")
+    for agente in listar_agentes():
+        print(f"  {agente['nombre']} | Rol: {agente['rol']} | Energia: {agente['energia']}")
+        print("\n--- Bandeja de Hermes ---")
+    for msg in leer_mensajes("Hermes"):
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
 
     # PRUEBA: Cierra Python. Vuelve a abrir. ¿Siguen los mensajes? ¿Y los agentes?
-    # CONCLUSION:
+    # CONCLUSION: Si, siguen ahí. Eso es porque tanto los agentes como los mensajes están guardados en la base de datos agentes.db. 
+    # Mientras el archivo exista, podemos acceder a toda esa información aunque hayamos cerrado y vuelto a abrir Python. 
+    # Esto demuestra que hemos logrado darle memoria permanente a nuestros agentes usando SQLite.
 
     # -----------------------------------------------------------#
     # Felicidades! Ya sabes persistir datos con SQLite.
