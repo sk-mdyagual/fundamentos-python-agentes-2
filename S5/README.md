@@ -20,7 +20,7 @@ cd S5
 ### 2. Crea el entorno virtual
 
 ```bash
-python3 -m venv .venv
+python3 -m venv .venv ## -> Hay que quitar el 3 para que funcione en mi local
 ```
 
 Esto crea una carpeta `.venv` dentro de `S5/` con una copia aislada de Python.
@@ -39,7 +39,7 @@ source .venv/bin/activate
 
 **Windows (PowerShell):**
 ```powershell
-.venv\Scripts\Activate.ps1
+.venv\Scripts\Activate.ps1 ## -> Usé este
 ```
 
 Sabras que esta activo porque veras `(.venv)` al inicio de tu linea de terminal.
@@ -61,8 +61,7 @@ python -c "import requests; print('Requests - OK')"
 
 ## Sesion 1: Persistencia con SQLite
 
-**Archivo:** `S5_sesion_1.py`
-**Terminales necesarias:** 1
+**Archivo:** `S5_sesion_1.py` 
 
 SQLite viene incluido con Python — no necesitas instalar nada extra para esta sesion.
 

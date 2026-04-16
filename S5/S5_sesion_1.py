@@ -143,7 +143,8 @@ if __name__ == "__main__":
     print("Script terminado. ¿Donde quedo el agente Atlas? En ningun lado. La RAM se borro.")
 
     # PRUEBA: Vuelve a ejecutar el script. Atlas nace de cero cada vez. Eso es amnesia.
-    # CONCLUSION:
+    # CONCLUSION: Los datos no persisten en la RAM. Se inicia y se finaliza sin guardar nada. 
+    # Necesitamos una forma de guardar datos en un lugar permanente: una base de datos. En el siguiente capitulo aprenderemos a usar SQLite para eso.
 
     # ======================================================
     # CAPITULO 2: SQL en 5 minutos (10 min)
@@ -155,12 +156,14 @@ if __name__ == "__main__":
     # sin que se rompa nada.
 
     # --- Descomenta el siguiente bloque, ejecuta y observa ---
-    # crear_tablas()
-    # print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
-    # print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
+    crear_tablas()
+    print(f"[Sistema] Tablas creadas. ¿Existe el archivo? {os.path.exists(DB_PATH)}")
+    print(f"[Sistema] Archivo de base de datos: {DB_PATH}")
 
     # PRUEBA: Busca el archivo agentes.db en tu carpeta S5/. Abrelo con un editor de texto. ¿Que ves? (Nada legible, es binario.)
-    # CONCLUSION:
+    # CONCLUSION: Crea las tablas genera un archivo agentes.db. Este archivo es la base de datos donde se guardaran los agentes y mensajes. 
+    # Aunque no se pueda leer directamente, es el lugar donde SQLite almacena toda la informacion de forma estructurada y permanente. 
+    # Por ahora solo salen caracteres extraños porque es un formato binario optimizado para consultas, no para lectura humana. En el siguiente capitulo aprenderemos a insertar datos en esta base de datos.
 
     # ======================================================
     # CAPITULO 3: Registrar un agente (10 min)
