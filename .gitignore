@@ -1,7 +1,15 @@
+# Variables de entorno (secretos — nunca versionar)
+.env
+!.env.example
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class
+
+# Datos de usuarios (contiene contraseñas - no subir a Git)
+#usuarios.json se permite ya que es de prueba, pero si se quisiera ignorar se puede descomentar la siguiente línea
+#usuarios.json
 
 # C extensions
 *.so
@@ -206,3 +214,6 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Archivos y carpetas pesadas (personalizado)
+ffmpeg_bin/
