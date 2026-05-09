@@ -46,30 +46,31 @@ BASE_URL = "http://localhost:8000"
 
 # --- Descomenta las siguientes funciones ---
 
-# def consultar_agente_http(nombre: str) -> dict | None:
-#     """Consulta un agente a traves del API usando requests.get()."""
-#     respuesta = requests.get(f"{BASE_URL}/agente/{nombre}")
-#     if respuesta.status_code == 200:
-#         return respuesta.json()
-#     elif respuesta.status_code == 404:
-#         print(f"[Cliente] Agente '{nombre}' no encontrado (404)")
-#         return None
-#     else:
-#         print(f"[Cliente] Error inesperado: {respuesta.status_code}")
-#         return None
-#
-#
-# def enviar_mensaje_http(remitente: str, destinatario: str, contenido: str) -> dict:
-#     """Envia un mensaje a traves del API usando requests.post()."""
-#     datos = {"remitente": remitente, "destinatario": destinatario, "contenido": contenido}
-#     respuesta = requests.post(f"{BASE_URL}/mensajes/", json=datos)
-#     return respuesta.json()
+def consultar_agente_http(nombre: str) -> dict | None:
+    """Consulta un agente a traves del API usando requests.get()."""
+    respuesta = requests.get(f"{BASE_URL}/agente/{nombre}")
+    if respuesta.status_code == 200:
+        return respuesta.json()
+    elif respuesta.status_code == 404:
+        print(f"[Cliente] Agente '{nombre}' no encontrado (404)")
+        return None
+    else:
+        print(f"[Cliente] Error inesperado: {respuesta.status_code}")
+        return None
+
+
+def enviar_mensaje_http(remitente: str, destinatario: str, contenido: str) -> dict:
+    """Envia un mensaje a traves del API usando requests.post()."""
+    datos = {"remitente": remitente, "destinatario": destinatario, "contenido": contenido}
+    respuesta = requests.post(f"{BASE_URL}/mensajes/", json=datos)
+    return respuesta.json()
 
 # PRUEBA: Descomenta las funciones de arriba. Luego envia un mensaje via HTTP
 #         ejecutando este script. Despues abre Swagger UI (http://localhost:8000/docs)
 #         y consulta la bandeja con GET /mensajes/{nombre}. ¿El mensaje aparece?
-# CONCLUSION:
-
+# CONCLUSION: Al ejecutar este script, se envía un mensaje a través del endpoint POST /mensajes/. Luego, al consultar la bandeja del destinatario en 
+# Swagger UI con GET /mensajes/{nombre}, el mensaje enviado desde el script aparece correctamente, demostrando que la comunicación entre el cliente HTTP 
+# y el servidor FastAPI funciona como se espera. Dado que entrega los mensajes de respuesta correctos si todo salió Ok (200) o si hubo un error (404)
 
 # ======================================================
 # CAPITULO 7: El circuito completo (10 min)
@@ -85,35 +86,37 @@ BASE_URL = "http://localhost:8000"
 
 # --- Descomenta el siguiente bloque ---
 
-# if __name__ == "__main__":
-#     # 1. Verificar que el servidor esta activo
-#     respuesta = requests.get(f"{BASE_URL}/")
-#     print(f"Servidor: {respuesta.json()}")
-#
-#     # 2. Registrar un agente via POST
-#     nuevo_agente = {"nombre": "Orion", "rol": "estratega", "energia": 130}
-#     respuesta = requests.post(f"{BASE_URL}/agentes/", json=nuevo_agente)
-#     print(f"Registrar agente: {respuesta.json()}")
-#
-#     # 3. Consultar el agente via GET
-#     agente = consultar_agente_http("Orion")
-#     print(f"Agente consultado: {agente}")
-#
-#     # 4. Enviar un mensaje via POST
-#     resultado = enviar_mensaje_http("Orion", "Atlas", "Solicito reporte de la mision.")
-#     print(f"Mensaje enviado: {resultado}")
-#
-#     # 5. Consultar bandeja de Atlas via GET
-#     respuesta = requests.get(f"{BASE_URL}/mensajes/Atlas")
-#     mensajes = respuesta.json()
-#     print(f"\n--- Bandeja de Atlas ({len(mensajes)} mensajes) ---")
-#     for msg in mensajes:
-#         print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
+if __name__ == "__main__":
+    # 1. Verificar que el servidor esta activo
+    respuesta = requests.get(f"{BASE_URL}/")
+    print(f"Servidor: {respuesta.json()}")
+
+    # 2. Registrar un agente via POST
+    nuevo_agente = {"nombre": "Orion", "rol": "estratega", "energia": 130}
+    respuesta = requests.post(f"{BASE_URL}/agentes/", json=nuevo_agente)
+    print(f"Registrar agente: {respuesta.json()}")
+
+    # 3. Consultar el agente via GET
+    agente = consultar_agente_http("Orion")
+    print(f"Agente consultado: {agente}")
+
+    # 4. Enviar un mensaje via POST
+    resultado = enviar_mensaje_http("Orion", "Atlas", "Solicito reporte de la mision.")
+    print(f"Mensaje enviado: {resultado}")
+
+    # 5. Consultar bandeja de Atlas via GET
+    respuesta = requests.get(f"{BASE_URL}/mensajes/Atlas")
+    mensajes = respuesta.json()
+    print(f"\n--- Bandeja de Atlas ({len(mensajes)} mensajes) ---")
+    for msg in mensajes:
+        print(f"  [{msg['timestamp']}] {msg['remitente']} -> {msg['contenido']}")
 
 # PRUEBA: Descomenta todo el bloque de arriba y ejecuta este script.
 #         Luego abre Swagger UI y haz lo mismo manualmente desde el navegador.
 #         ¿Ves los mismos datos? Ambos caminos llegan al mismo servidor.
-# CONCLUSION:
+# CONCLUSION: El circuito completo funciona correctamente. Todo desde el programa (Python) sin tocar el navegador o tener un front para la ejecución
+# Este script y Swagger hacen exactamente lo mismo: envian peticiones HTTP al servidor FastAPI. 
+# La unica diferencia es la interfaz: codigo vs navegador.
 
 
 # -----------------------------------------------------------#

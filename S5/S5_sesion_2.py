@@ -138,7 +138,9 @@ def inicio():
 #         por FastAPI a partir de tu codigo. Puedes probar endpoints ahi mismo.
 # PRUEBA: Cambia el mensaje de arriba, guarda el archivo, y recarga /docs.
 #         uvicorn --reload detecta el cambio y reinicia el servidor solo.
-# CONCLUSION:
+# CONCLUSION: En este capitulo aprendimos a crear un endpoint GET basico que retorna un mensaje de bienvenida.
+# Probamos el endpoint en Swagger UI, y vimos como cualquier cambio en el codigo se refleja automaticamente en la documentacion y 
+# funcionalidad del servidor gracias a uvicorn --reload.
 
 
 # ======================================================
@@ -157,21 +159,22 @@ def inicio():
 # Para eso usamos HTTPException.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-# @app.get("/agente/{nombre}")
-# def obtener_agente(nombre: str):
-#     agente = despertar_agente(nombre)
-#     if agente is None:
-#         raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
-#     return agente
-#
-#
-# @app.get("/agentes/")
-# def obtener_todos_los_agentes():
-#     return listar_agentes()
+@app.get("/agente/{nombre}")
+def obtener_agente(nombre: str):
+    agente = despertar_agente(nombre)
+    if agente is None:
+        raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
+    return agente
+
+
+@app.get("/agentes/")
+def obtener_todos_los_agentes():
+    return listar_agentes()
 
 # PRUEBA: Prueba en Swagger UI: busca un agente que exista y uno que no.
 #         ¿Que respuesta recibes? ¿Que codigo HTTP retorna cada caso?
-# CONCLUSION:
+# CONCLUSION: Al buscar un agente que existe, recibimos un JSON con los datos del agente y un codigo HTTP 200 (OK). 
+# Si buscamos un agente que no existe, recibimos un error con codigo HTTP 404 (Not Found) y un mensaje indicando que el agente no fue encontrado.
 
 
 # ======================================================
@@ -191,21 +194,21 @@ def inicio():
 # con detalles de que salio mal. No necesitas escribir validacion manual.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-# @app.post("/agentes/")
-# def crear_agente(agente: AgenteRequest):
-#     resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
-#     return {"mensaje": resultado}
-#
-#
-# @app.post("/mensajes/")
-# def crear_mensaje(mensaje: MensajeRequest):
-#     resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
-#     return {"mensaje": resultado}
-#
-#
-# @app.get("/mensajes/{nombre}")
-# def obtener_mensajes(nombre: str):
-#     return leer_mensajes(nombre)
+@app.post("/agentes/")
+def crear_agente(agente: AgenteRequest):
+    resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
+    return {"mensaje": resultado}
+
+
+@app.post("/mensajes/")
+def crear_mensaje(mensaje: MensajeRequest):
+    resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
+    return {"mensaje": resultado}
+
+
+@app.get("/mensajes/{nombre}")
+def obtener_mensajes(nombre: str):
+    return leer_mensajes(nombre)
 
 # PRUEBA: En Swagger UI: crea un agente nuevo via POST /agentes/.
 #         Luego consultalo via GET /agente/{nombre}. ¿Aparece?
@@ -213,7 +216,10 @@ def inicio():
 #         Luego consulta la bandeja via GET /mensajes/{nombre}.
 # PRUEBA: Intenta enviar un POST con energia="hola" en vez de un numero.
 #         ¿Que error recibes? Esa es la validacion automatica de Pydantic.
-# CONCLUSION:
+# CONCLUSION: Al crear un agente nuevo usando POST /agentes/, el agente se registra correctamente y podemos consultarlo luego con GET /agente/{nombre}.
+# Al enviar un mensaje con POST /mensajes/, el mensaje se almacena y aparece en la bandeja del destinatario al consultar GET /mensajes/{nombre}.
+# Si intentamos enviar un POST con datos invalidos (por ejemplo, energia="hola"), FastAPI retorna un error 422 con detalles sobre el campo que tiene el error, 
+# demostrando la validacion automatica de Pydantic.
 
 
 # -----------------------------------------------------------#
