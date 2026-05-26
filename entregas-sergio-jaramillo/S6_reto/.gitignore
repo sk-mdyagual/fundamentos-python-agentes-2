@@ -1,0 +1,14 @@
+# Variables de entorno — contienen secretos, nunca versionar
+.env
+
+# Base de datos SQLite — se regenera al ejecutar el servidor
+agentes.db
+
+# Bytecode de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Entorno virtual
+.venv/
+venv/
