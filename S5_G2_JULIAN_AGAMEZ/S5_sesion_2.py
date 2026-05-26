@@ -130,7 +130,7 @@ app = FastAPI(
 
 @app.get("/")
 def inicio():
-    return {"status": "online", "mensaje": "Bienvenido al sistema de agentes FastAPI!"}
+    return {"status": "online", "mensaje": "Bienvenido al sistema de agentes"}
 
 
 # PRUEBA: Abre http://localhost:8000/docs en tu navegador. Esa es Swagger UI.
@@ -138,7 +138,7 @@ def inicio():
 #         por FastAPI a partir de tu codigo. Puedes probar endpoints ahi mismo.
 # PRUEBA: Cambia el mensaje de arriba, guarda el archivo, y recarga /docs.
 #         uvicorn --reload detecta el cambio y reinicia el servidor solo.
-# CONCLUSION: Se cambio el mensaje de Bienvenida. El servidor se reinicio automaticamente. La documentacion se actualizo sola. Eso es lo magico de FastAPI.
+# CONCLUSION:
 
 
 # ======================================================
@@ -157,21 +157,21 @@ def inicio():
 # Para eso usamos HTTPException.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-@app.get("/agente/{nombre}")
-def obtener_agente(nombre: str):
-    agente = despertar_agente(nombre)
-    if agente is None:
-        raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
-    return agente
-
-
-@app.get("/agentes/")
-def obtener_todos_los_agentes():
-    return listar_agentes()
+# @app.get("/agente/{nombre}")
+# def obtener_agente(nombre: str):
+#     agente = despertar_agente(nombre)
+#     if agente is None:
+#         raise HTTPException(status_code=404, detail=f"Agente '{nombre}' no encontrado")
+#     return agente
+#
+#
+# @app.get("/agentes/")
+# def obtener_todos_los_agentes():
+#     return listar_agentes()
 
 # PRUEBA: Prueba en Swagger UI: busca un agente que exista y uno que no.
 #         ¿Que respuesta recibes? ¿Que codigo HTTP retorna cada caso?
-# CONCLUSION: Cuando el agente existe, recibes un JSON con sus datos y codigo 200. Cuando no existe, recibes un error 404 con un mensaje de detalle. FastAPI maneja esto facilmente con HTTPException.
+# CONCLUSION:
 
 
 # ======================================================
@@ -191,21 +191,21 @@ def obtener_todos_los_agentes():
 # con detalles de que salio mal. No necesitas escribir validacion manual.
 
 # --- Descomenta el siguiente bloque, ejecuta y observa ---
-@app.post("/agentes/")
-def crear_agente(agente: AgenteRequest):
-    resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
-    return {"mensaje": resultado}
-
-
-@app.post("/mensajes/")
-def crear_mensaje(mensaje: MensajeRequest):
-    resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
-    return {"mensaje": resultado}
-
-
-@app.get("/mensajes/{nombre}")
-def obtener_mensajes(nombre: str):
-    return leer_mensajes(nombre)
+# @app.post("/agentes/")
+# def crear_agente(agente: AgenteRequest):
+#     resultado = registrar_agente(agente.nombre, agente.rol, agente.energia)
+#     return {"mensaje": resultado}
+#
+#
+# @app.post("/mensajes/")
+# def crear_mensaje(mensaje: MensajeRequest):
+#     resultado = enviar_mensaje(mensaje.remitente, mensaje.destinatario, mensaje.contenido)
+#     return {"mensaje": resultado}
+#
+#
+# @app.get("/mensajes/{nombre}")
+# def obtener_mensajes(nombre: str):
+#     return leer_mensajes(nombre)
 
 # PRUEBA: En Swagger UI: crea un agente nuevo via POST /agentes/.
 #         Luego consultalo via GET /agente/{nombre}. ¿Aparece?
@@ -213,7 +213,7 @@ def obtener_mensajes(nombre: str):
 #         Luego consulta la bandeja via GET /mensajes/{nombre}.
 # PRUEBA: Intenta enviar un POST con energia="hola" en vez de un numero.
 #         ¿Que error recibes? Esa es la validacion automatica de Pydantic.
-# CONCLUSION: La creacion de agentes y mensajes funciona perfectamente via HTTP. FastAPI se encarga de validar los datos y manejar errores automaticamente. La documentacion en /docs se actualiza sola con cada nuevo endpoint. al enviar "hola" en energia me devolvio un 422 con un mensaje detallado de que el campo energia esperaba un numero pero recibio una cadena. Eso es la magia de Pydantic y FastAPI trabajando juntos.
+# CONCLUSION:
 
 
 # -----------------------------------------------------------#
